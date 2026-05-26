@@ -17,7 +17,7 @@ The model simulates a population of heterogeneous consumers exposed to disaster 
 
 ## Files
 
-- `models/netlogo_v4.nlogo`: main NetLogo model
+- `models/boltzmann_wealth_insurance.nlogox`: main NetLogo model
 - `models/consumers.nls`: consumer procedures
 - `models/companies.nls`: company procedures
 - `models/reporters.nls`: reporter procedures
