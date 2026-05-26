@@ -1,6 +1,8 @@
-# Insurance ABM SIIMBRA
+# Insurance ABM SIMBRA
 
 This repository contains an agent-based model implemented in NetLogo to study insurance markets under adverse selection, insurer pricing strategies, government subsidies, and capital constraints.
+This version of the model was presented at the 1st Brazilian Interdisciplinary Symposium on Agent-Based Models – São Paulo, May 28, 2026.
+
 
 ## Model overview
 
