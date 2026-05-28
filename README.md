@@ -19,21 +19,19 @@ The model simulates a population of heterogeneous consumers exposed to disaster 
 
 ## Files
 
-- `models/boltzmann_wealth_insurance.nlogox`: main NetLogo model
-- `models/consumers.nls`: consumer procedures
-- `models/companies.nls`: company procedures
-- `models/reporters.nls`: reporter procedures
-- `experiments/`: BehaviorSpace experiment configurations
-- `results/`: selected output files
+- `insurance_v_simbra.nlogox`: main NetLogo model
+- `consumers.nls`: consumer procedures
+- `companies.nls`: company procedures
+- `reporters.nls`: reporter procedures
 
 ## Requirements
 
-- NetLogo 7.0.4 or later
+- NetLogo 7.0.4
 
 ## How to run
 
 1. Open NetLogo.
-2. Load `models/boltzmann_wealth_insurance.nlogox`.
+2. Load `insurance_v_simbra.nlogox`.
 3. Configure the desired scenario using the interface controls.
 4. Click `setup`.
 5. Click `go` or run BehaviorSpace experiments.
@@ -41,6 +39,8 @@ The model simulates a population of heterogeneous consumers exposed to disaster 
 ## Citation
 
 If you use this model, please cite this repository and NetLogo.
+
+SANTOS, André Ferreira. Dinâmicas de mercados de seguros com informação assimétrica: evidências de um modelo baseado em agentes. In: 1° SIMPÓSIO INTERDISCIPLINAR BRASILEIRO DE MODELOS BASEADOS EM AGENTES, 2026, São Paulo. São Paulo, 28 maio 2026. Repositório: https://github.com/andresnts/insurance-abm-simbra
 
 ## License
 
