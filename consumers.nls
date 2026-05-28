@@ -1,0 +1,162 @@
+consumers-own [ wealth initial_wealth insured?
+                type-risk historical-risk-type risk 
+                gamma price  expected-loss subsidy 
+                disaster-occurred? disaster-history n-disaster
+                actual-risk 
+
+]
+
+to move-consumers
+  let free-neighbors neighbors with [ not any? turtles-here ]
+  if any? free-neighbors [
+    move-to one-of free-neighbors
+  ]
+end
+
+to transact
+ let neighbor-consumers consumers-on neighbors
+
+  if any? neighbor-consumers and wealth > 0 [
+
+    let transfer-amount min list wealth 1
+
+    set wealth wealth - transfer-amount
+
+    ask one-of neighbor-consumers [
+
+      set wealth wealth + transfer-amount
+
+    ]
+
+  ]
+end
+
+to receive-salary
+    set wealth wealth + initial_wealth * 0.001
+end
+
+to buy-insurance
+  set wealth (wealth - price)
+  set insured? true
+  set color blue
+  ifelse government? = false [
+    ask one-of companies [
+      set capital (capital + [price] of myself)
+    ]
+  ][
+    ask one-of companies [
+      set capital (capital + [price] of myself + [subsidy] of myself)
+    ]
+  ]
+end
+
+
+to determine-initial-wealth
+  let mu 1
+  let sigma 0.5
+  set wealth max list 1 (round (exp (random-normal mu sigma)))
+end
+
+to determine-agent-type 
+  
+let base-risk 0.005
+  
+  ifelse random-float 1 < (lucky-percentage / 100)
+  [
+    set type-risk "lucky"
+    set risk (random-exponential (base-risk / 4)) 
+  ]
+  [
+    set type-risk "unlucky"
+    set risk (random-exponential (base-risk * 2.5))
+  ]
+  
+end
+
+to determine-inicial-price
+  set expected-loss disaster-loss-perc / 100 * loss
+  set price (mean-risk * expected-loss)
+end
+
+to determine-insurance-price
+  set expected-loss loss * (disaster-loss-perc / 100)
+  ifelse symmetric-information? = true [
+    set price risk * expected-loss 
+  ][
+    set price mean-risk * expected-loss
+  ]
+  set price price + company-markup
+end
+
+to determine-gamma
+
+  let lw-min min [ln wealth] of consumers
+  let lw-max max [ln wealth] of consumers
+  
+  let gamma-min 0.5
+  let gamma-max 1.5
+  
+  ask consumers [
+    let lw ln wealth
+    ifelse lw-max = lw-min [
+      set gamma (gamma-min + gamma-max) / 2
+    ] [
+      set gamma gamma-max - (gamma-max - gamma-min) *
+        ((lw - lw-min) / (lw-max - lw-min))
+    ]
+  ]
+end
+
+to-report crra-utility-function [w g]
+
+  set w max list w 1e-6
+  if g = 1 [
+    report ln(w)
+  ]
+  report ((w ^ (1 - g)) / (1 - g))
+end
+
+to decide-insurance
+  
+  let u-insured crra-utility-function (wealth - price) gamma
+  
+  let u-uninsured (
+    risk * crra-utility-function (wealth - expected-loss) gamma +
+    (1 - risk) * crra-utility-function wealth gamma
+  )
+  ifelse u-insured < u-uninsured[
+    set insured? false
+  ][
+    buy-insurance
+  ]
+  
+end
+
+to receive-subsidy
+  let old-price price
+  set subsidy price * subsidy-percentage / 100
+  set price price - subsidy 
+  ifelse wealth >= price and wealth > 0 [
+        decide-insurance
+  ][
+        set insured? false
+  ]
+end
+
+to actualize-consumer-size-visual
+  let max-wealth max [wealth] of consumers
+  let min-wealth min [wealth] of consumers
+
+  ifelse max-wealth = min-wealth
+  [ set size 1 ]
+  [
+    set size min-size +
+      ((wealth - min-wealth) / (max-wealth - min-wealth))
+      * (max-size - min-size)
+  ]
+
+end
+
+
+
+

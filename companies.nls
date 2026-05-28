@@ -1,0 +1,70 @@
+companies-own [initial-capital capital]
+
+to verify-capital
+  if capital < 0 [
+    die
+  ]
+end
+
+to company-raise-price
+
+  if pending-capital-loss > 0 and n-insured-consumers > 0 [
+    set company-markup
+      company-markup +
+      ((pending-capital-loss / n-insured-consumers) * loss-repass / 100)
+
+  ]
+
+  set pending-capital-loss 0
+
+end
+
+to historical-risk
+
+  actuarial-buhlmann-risk
+  set expected-loss loss * (disaster-loss-perc / 100)
+  set price (actual-risk * expected-loss)
+  
+  
+end
+
+to actualize-risk
+  let n-total (ticks + 1)
+  let risk-probability ( n-disaster / n-total ) 
+  set actual-risk ((0.90 * actual-risk + 0.1 * risk-probability ) * 1.11)
+end
+
+to actualize-risk-learning
+  
+  let n-total (ticks + 1)
+  let risk-probability ( n-disaster / n-total )
+  let lambda  0.05
+  set actual-risk (actual-risk + lambda * ( risk-probability - actual-risk))
+  
+end
+
+to actuarial-buhlmann-risk
+
+  let n-total (ticks + 1)
+
+  let alpha 1
+  let beta 20
+
+  let empirical-risk
+    ((n-disaster + alpha)
+      / (n-total + alpha + beta))
+
+  let collective-risk mean-risk
+
+  let k k-credibility
+
+  let lambda
+    (n-total / (n-total + k))
+
+  set actual-risk
+    (lambda * empirical-risk
+      + (1 - lambda) * collective-risk)
+
+end
+
+

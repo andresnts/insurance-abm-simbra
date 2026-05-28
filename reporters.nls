@@ -1,0 +1,102 @@
+
+to-report wealth-report
+  report total-wealth
+end
+
+to-report mean-price-reporter 
+  report mean-price
+end
+
+to-report delta-wealth-report
+
+  if last-total-wealth = 0 [
+    set last-total-wealth total-wealth
+    report 0
+  ]
+
+  let delta (total-wealth - last-total-wealth) / last-total-wealth * 100
+  set last-total-wealth total-wealth 
+  report delta
+
+end
+
+to-report gini-report
+  
+  let x sort [wealth] of consumers
+  let n length x
+  
+  if n = 0 [ report 0 ]
+  
+  let total sum x
+  if total = 0 [ report 0 ]
+  
+  let weighted-sum 0
+  
+  (foreach x (n-values n [i -> i + 1]) [ 
+    [xi i] ->
+    set weighted-sum weighted-sum + xi * i
+  ])
+  
+  report (2 * weighted-sum) / (n * total) - (n + 1) / n
+end
+
+to-report total-capital-report
+  set total-capital sum [capital] of companies
+  report total-capital
+end
+
+
+to-report insured-perc-report
+  let insured-percentage (n-insured-consumers / n-consumers) 
+  report insured-percentage
+end
+
+to-report lucky-insured-perc-report
+  if n-insured-consumers = 0 [ report 0 ]
+  let lucky-insured-percentage (count consumers with [insured? and  type-risk = "lucky"] / n-insured-consumers)
+  report lucky-insured-percentage
+end
+
+to-report unlucky-insured-perc-report
+  if n-insured-consumers = 0 [ report 0 ]
+  let unlucky-insured-percentage (count consumers with [insured? and  type-risk = "unlucky"] / n-insured-consumers) 
+  report unlucky-insured-percentage
+end
+
+to-report lucky-market-penetration-report
+  let n-lucky count consumers with [type-risk = "lucky"]
+  if n-lucky = 0 [ report 0 ]
+  report (count consumers with [insured? and type-risk = "lucky"] / n-lucky) 
+end
+
+to-report unlucky-market-penetration-report
+  let n-unlucky count consumers with [type-risk = "unlucky"]
+  if n-unlucky = 0 [ report 0 ]
+  report (count consumers with [insured? and type-risk = "unlucky"] / n-unlucky)
+end
+
+to-report total-subsidy-report
+  report total-subsidy-cumulative
+end
+
+to-report insured-mean-wealth-report
+  report insured-mean-wealth 
+end
+
+to-report uninsured-mean-wealth-report
+  report uninsured-mean-wealth 
+end
+
+to-report insured-median-wealth-report
+  report insured-median-wealth 
+end
+
+to-report uninsured-median-wealth-report
+  report uninsured-median-wealth 
+end
+
+to-report capital-var-report
+  report capital-var
+end
+
+
